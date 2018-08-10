@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/stmobo/ld42-game/issues"
   },
-  "homepage": "https://github.com/stmobo/ld42-game#readme"
+  "homepage": "https://github.com/stmobo/ld42-game#readme",
+  "devDependencies": {
+    "electron": "^2.0.7"
+  }
 }
