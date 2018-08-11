@@ -31,7 +31,7 @@ function createNewBlob(game, tileX, tileY) {
 
 BlobTile.prototype.scheduleGrowLoop = function () {
     if (!this.growEvent) {
-        var growLoopTime = 500 + this.game.rnd.integerInRange(-100, 100);
+        var growLoopTime = 600;
         this.growEvent = this.game.time.events.loop(growLoopTime, this.randomGrow.bind(this));
     }
 };
@@ -134,7 +134,7 @@ BlobTile.prototype.update = function () {
         this.health = this.maxHealth;
     }
     
-    this.alpha = this.game.math.clamp(this.health / this.maxHealth, 0.15, 1.0);
+    this.alpha = this.game.math.clamp(this.health / this.maxHealth, 0.33, 1.0);
     
     if (
         isBlobAdjoining(this.game, this.tileX+1, this.tileY)

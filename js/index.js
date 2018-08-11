@@ -41,7 +41,7 @@ function create() {
         game.world.tiles[i] = new Array(core.gameAreaSize.y+1);
     }
     
-    game.stage.backgroundColor = '#555555';
+    game.stage.backgroundColor = '#dddddd';
     
     createNewBlob(game, 0, 0);
     createNewBlob(game, 0, core.gameAreaSize.y);
