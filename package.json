@@ -2,9 +2,11 @@
   "name": "enroaching",
   "version": "1.0.0",
   "description": "A game made for Ludum Dare 42.",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "gulp && electron .",
+    "build": "gulp"
   },
   "repository": {
     "type": "git",
@@ -17,6 +19,12 @@
   },
   "homepage": "https://github.com/stmobo/ld42-game#readme",
   "devDependencies": {
-    "electron": "^2.0.7"
+    "electron": "^2.0.7",
+    "gulp": "^3.9.1",
+    "webpack": "^4.16.5",
+    "webpack-stream": "^5.1.1"
+  },
+  "dependencies": {
+    "phaser-ce": "^2.11.0"
   }
 }
