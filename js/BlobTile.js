@@ -31,7 +31,7 @@ function createNewBlob(game, tileX, tileY) {
 
 BlobTile.prototype.scheduleGrowLoop = function () {
     if (!this.growEvent) {
-        var growLoopTime = 500 + this.game.rnd.integerInRange(-150, 150);
+        var growLoopTime = 500 + this.game.rnd.integerInRange(-100, 100);
         this.growEvent = this.game.time.events.loop(growLoopTime, this.randomGrow.bind(this));
     }
 };
@@ -86,15 +86,23 @@ BlobTile.prototype.grow = function (x, y) {
     var newY = this.tileY + y;
     
     if (!core.isValidTileCoordinate(newX, newY)) return;
-    if (core.getTileAt(this.game, newX, newY)) return;
     
-    var newTile = new BlobTile(this.game, newX, newY);
+    var adjTile = core.getTileAt(this.game, newX, newY);
+    
+    if(!adjTile) {
+        createNewBlob(this.game, newX, newY);
+    } else if (!(adjTile instanceof BlobTile)) {
+        adjTile.damage(25);
+        if (!adjTile.alive) {
+            createNewBlob(this.game, newX, newY);
+        }
+    }
 };
 
 BlobTile.prototype.randomGrow = function () {
     if (!this.alive) return;
     if (this.health < this.maxHealth) return;
-    if (Math.random() > 0.5) return;
+    if (Math.random() > 0.4) return;
     
     var dir = this.game.rnd.between(0, 3);
     
@@ -111,6 +119,12 @@ BlobTile.prototype.randomGrow = function () {
     }
 };
 
+function isBlobAdjoining(game, x, y) {
+    var tile = core.getTileAt(game, x, y);
+    if(!tile || !(tile instanceof BlobTile)) return false;
+    return true;
+}
+
 BlobTile.prototype.update = function () {
     if (this.sleeping) return;
     
@@ -123,10 +137,10 @@ BlobTile.prototype.update = function () {
     this.alpha = this.game.math.clamp(this.health / this.maxHealth, 0.15, 1.0);
     
     if (
-        core.getTileAt(this.game, this.tileX+1, this.tileY)
-        && core.getTileAt(this.game, this.tileX-1, this.tileY)
-        && core.getTileAt(this.game, this.tileX, this.tileY+1)
-        && core.getTileAt(this.game, this.tileX, this.tileY-1)
+        isBlobAdjoining(this.game, this.tileX+1, this.tileY)
+        && isBlobAdjoining(this.game, this.tileX-1, this.tileY)
+        && isBlobAdjoining(this.game, this.tileX, this.tileY+1)
+        && isBlobAdjoining(this.game, this.tileX, this.tileY-1)
     ) {
         this.setSleeping(true);
     }

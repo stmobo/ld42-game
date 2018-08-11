@@ -17,12 +17,15 @@ var gameConfig = {
 
 var game = new Phaser.Game(gameConfig);
 var player;
+var tileCursor;
 
 function preload() {
     game.load.image('floor', 'dist/img/floor.png');
     game.load.image('player', 'dist/img/player.png');
     game.load.image('blob', 'dist/img/blob.png');
     game.load.image('fire', 'dist/img/projectile.png');
+    game.load.image('cursor', 'dist/img/cursor.png');
+    game.load.image('wall', 'dist/img/wall.png');
 }
 
 function create() {
@@ -31,6 +34,7 @@ function create() {
     
     game.blobTiles = game.add.group();
     game.sleepingBlobTiles = game.add.group();
+    game.wallTiles = game.add.group();
     
     game.world.tiles = new Array(core.gameAreaSize.x);
     for (var i=0;i<=core.gameAreaSize.x;i++) {
@@ -47,10 +51,21 @@ function create() {
     player = new Player(game, 50, 50);
     
     game.camera.follow(player);
+    
+    tileCursor = game.add.image(100, 150, 'cursor');
+    tileCursor.bringToTop();
+    
+    game.input.mouse.capture = true;
 }
 
 function update() {
     game.physics.arcade.collide(player, game.blobTiles, function (player, blob) {
         player.damage(100);
     });
+    
+    game.physics.arcade.collide(player, game.wallTiles);
+    
+    var cursorPos = core.getCursorTilePos(game);
+    tileCursor.x = cursorPos.x * core.tileSize;
+    tileCursor.y = cursorPos.y * core.tileSize;
 }

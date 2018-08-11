@@ -3,8 +3,8 @@ const tileSize = 16;     // size of tiles in game (graphics will be scaled)
 
 /* In tiles */
 const gameAreaSize = {
-    x: 75,
-    y: 75
+    x: 76,
+    y: 76
 }
 
 function isValidTileCoordinate(x, y) {
@@ -24,6 +24,13 @@ function tileIsEmpty(game, x, y) {
     return true;
 }
 
+function getCursorTilePos(game) {
+    var x = Math.floor(game.input.worldX / tileSize);
+    var y = Math.floor(game.input.worldY / tileSize);
+    
+    return {x, y};
+}
+
 module.exports = {
     tileSize,
     tileBaseSize,
@@ -31,4 +38,5 @@ module.exports = {
     isValidTileCoordinate,
     getTileAt,
     tileIsEmpty,
+    getCursorTilePos,
 };

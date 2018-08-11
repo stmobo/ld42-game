@@ -1,4 +1,5 @@
 const core = require('core');
+const {createWall, WallTile} = require('WallTile'); 
 
 function Player(game, x, y) {
     Phaser.Sprite.call(this, game, x, y, 'player');
@@ -13,10 +14,10 @@ function Player(game, x, y) {
     this.weapon = game.add.weapon(300, 'fire');
     this.weapon.bulletKillType = Phaser.Weapon.KILL_LIFESPAN;
     this.weapon.bulletLifespan = 500;
-    this.weapon.fireRate = 5;
+    this.weapon.fireRate = 2.5;
     this.weapon.bulletSpeed = 500;
     //this.weapon.bulletInheritSpriteSpeed = true;
-    this.weapon.bulletAngleVariance = 15;
+    this.weapon.bulletAngleVariance = 20;
     this.weapon.bulletRotateToVelocity = true;
     
     this.weapon.trackSprite(this, this.offsetX - (this.width / 2), this.offsetY - (this.height / 2), true);
@@ -28,7 +29,7 @@ function Player(game, x, y) {
         'right': Phaser.KeyCode.D,
         'up': Phaser.KeyCode.W,
         'down': Phaser.KeyCode.S,
-        'fire': Phaser.KeyCode.SPACEBAR
+        'fire': Phaser.KeyCode.SPACEBAR,
     });
 }
 
@@ -60,13 +61,23 @@ Player.prototype.update = function () {
     
     this.rotation = this.game.math.angleBetween(this.centerX, this.centerY, this.game.input.worldX, this.game.input.worldY);
     
-    if (this.buttons.fire.isDown) {
+    if (this.buttons.fire.isDown || this.game.input.activePointer.leftButton.isDown) {
         this.weapon.fire();
+    }
+    
+    if (this.game.input.activePointer.rightButton.isDown) {
+        var p = core.getCursorTilePos(this.game);
+        createWall(this.game, p.x, p.y);
     }
     
     this.game.physics.arcade.collide(this.weapon.bullets, this.game.blobTiles, (bullet, blob) => {
         bullet.kill();
-        blob.damage(10);
+        blob.damage(12.5);
+    });
+    
+    this.game.physics.arcade.collide(this.weapon.bullets, this.game.wallTiles, (bullet, wall) => {
+        bullet.kill();
+        wall.damage(5);
     });
 };
 
