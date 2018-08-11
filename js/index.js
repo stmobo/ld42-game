@@ -1,5 +1,5 @@
 const core = require('core');
-const BlobTile = require('BlobTile');
+const {BlobTile, createNewBlob} = require('BlobTile');
 const Player = require('Player');
 
 var gameConfig = {
@@ -22,6 +22,7 @@ function preload() {
     game.load.image('floor', 'dist/img/floor.png');
     game.load.image('player', 'dist/img/player.png');
     game.load.image('blob', 'dist/img/blob.png');
+    game.load.image('fire', 'dist/img/projectile.png');
 }
 
 function create() {
@@ -29,6 +30,7 @@ function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
     
     game.blobTiles = game.add.group();
+    game.sleepingBlobTiles = game.add.group();
     
     game.world.tiles = new Array(core.gameAreaSize.x);
     for (var i=0;i<=core.gameAreaSize.x;i++) {
@@ -37,17 +39,18 @@ function create() {
     
     game.stage.backgroundColor = '#555555';
     
-    var blob = new BlobTile(game, 13, 15);
+    createNewBlob(game, 0, 0);
+    createNewBlob(game, 0, core.gameAreaSize.y);
+    createNewBlob(game, core.gameAreaSize.x, 0);
+    createNewBlob(game, core.gameAreaSize.x, core.gameAreaSize.y);
     
-    player = new Player(game, 10, 10);
-    game.add.existing(player);
-    game.physics.arcade.enable(player);
+    player = new Player(game, 50, 50);
     
     game.camera.follow(player);
 }
 
 function update() {
-    game.physics.arcade.collide(player, game.blobTiles, function () {
-        console.log("collision");
+    game.physics.arcade.collide(player, game.blobTiles, function (player, blob) {
+        player.damage(100);
     });
 }

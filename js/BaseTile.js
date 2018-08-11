@@ -18,10 +18,18 @@ function BaseTile(game, tileX, tileY, key) {
     
     game.world.tiles[tileX][tileY] = this;
     
-    Phaser.Sprite.call(this, game, tileX*core.tileSize, tileY*core.tileSize, key);    
+    Phaser.Sprite.call(this, game, tileX*core.tileSize, tileY*core.tileSize, key);
+    
+    var scaleFactor = core.tileSize / core.tileBaseSize;
+    this.scale.setTo(scaleFactor, scaleFactor);
 }
 
 BaseTile.prototype = Object.create(Phaser.Sprite.prototype);
 BaseTile.prototype.constructor = BaseTile;
+
+BaseTile.prototype.destroy = function () {
+    delete this.game.world.tiles[this.tileX][this.tileY];
+    Phaser.Sprite.prototype.destroy.call(this);
+};
 
 module.exports = BaseTile;
